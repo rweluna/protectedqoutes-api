@@ -1,0 +1,24 @@
+CREATE TABLE IF NOT EXISTS api_keys (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  key_hash TEXT NOT NULL, -- SHA-256 or similar
+  revoked BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS quotes (
+  id SERIAL PRIMARY KEY,
+  text TEXT NOT NULL,
+  author TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS usage_logs (
+  id SERIAL PRIMARY KEY,
+  api_key_id INTEGER REFERENCES api_keys(id) ON DELETE SET NULL,
+  path TEXT NOT NULL,
+  method TEXT NOT NULL,
+  ip TEXT,
+  user_agent TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
